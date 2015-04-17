@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+		<!-- 配置到struts.properties -->
+  		<!--   
+ 		 <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+  		 <constant name="struts.devMode" value="true" />
+		 <constant name="struts.objectFactory" value="spring" /> 
+			-->
+	
+	
+    <package name="default" namespace="/" extends="struts-default">
+
+		<!--  拦截器 -->
+		<interceptors>
+			<!-- 定义名为logger的拦截器
+			<interceptor name="logger" class="org.sunshine.interceptor.LogInterceptor"></interceptor>
+			
+			定义名为security的拦截器
+			<interceptor name="security" class="org.sunshine.interceptor.SecurityInterceptor"></interceptor>
+			
+			拦截栈
+			<interceptor-stack name="loggerAndSecurityStack">
+				<interceptor-ref name="logger"></interceptor-ref>
+				<interceptor-ref name="security"></interceptor-ref>
+			</interceptor-stack>-->
+			
+			<interceptor name="timertest" class="com.sunshine.common.interceptor.TimerInterceptor"></interceptor>
+			
+			<interceptor-stack name="teststatck">
+				<interceptor-ref name="timertest"></interceptor-ref>
+			</interceptor-stack>
+			
+		</interceptors>
+		
+		<!-- 默认拦截栈引用 ,如果在action中引入了别的拦截栈，此拦截栈不在使用
+		<default-interceptor-ref name="loggerAndSecurityStack"></default-interceptor-ref>
+		-->
+		
+		<!-- 如果请求的action不存在，则会调用index action
+        <default-action-ref name="index" /> -->
+
+        <global-results>
+            <result name="error">/error.jsp</result>
+            <result name="login">/login.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+
+			
+        <action name="index" class="com.sunshine.login.user.action.">
+            <!-- <result type="redirectAction">
+                <param name="actionName">HelloWorld</param>
+                <param name="namespace">/example</param>
+            </result> -->
+            <result name="index">
+            	/index.jsp
+            </result>
+            <result name="success">
+            	/reg.jsp
+            </result>
+            
+            <interceptor-ref name="teststatck"></interceptor-ref>
+            
+            
+            <!-- <interceptor-ref name="logger"></interceptor-ref>
+            <interceptor-ref name="security"></interceptor-ref> 
+            
+            	使用拦截栈
+            <interceptor-ref name="loggerAndSecurityStack"></interceptor-ref> -->
+        </action>
+        
+        <action name="login" class="com.sunshine.login.user.action.LoginAction">
+        	<result name="success">/login.jsp</result>
+        </action>
+        
+        <action name="reg" class="com.sunshine.login.user.action.RegAction">
+        	<result name="success">/index.jsp</result>
+        	<result name="invalid.token">
+        		/error.jsp
+        	</result>
+        	<!-- <interceptor-ref name="token">
+        		<param name="excludeMethods">default</param>
+        	</interceptor-ref> -->
+        	
+        	<!-- 不会重定向到错误页面，会展示陈宫页面 -->
+        	<interceptor-ref name="tokenSession">
+        		<!-- <param name="excludeMethods">default</param> -->
+        	</interceptor-ref>
+        </action>
+        
+      <!--   <action name="search*" class="org.sunshine.test.Search{1}Action">
+        	<result name="error">/error.jsp</result>
+        	<result>/{1}.jsp</result>
+        </action> -->
+        
+       <!-- a_b  1:a  2:b 0:a_b
+        <action name="*_*" class="org.sunshine.test.{1}Action" method="{2}">
+        	<result>{0}.jsp</result>
+        </action> -->
+        
+      <!--   <action name="locationtest" class="org.sunshine.test.LocationTest" >
+        	<result name="aabb" type="dispatcher">
+        		<param name="location">/aabb.jsp?id=${id}</param>
+        		<param name="parse">true</param>
+        	</result>
+        	
+        	<result name="abc" type="redirectAction">
+        		<param name="actionName">abcAction</param>
+        		<param name="namespace">/secure</param>
+        	</result>
+        
+        </action> -->
+        
+        
+    </package>
+
+	<include file="struts/study.xml"/>
+	<include file="struts_validate.xml"/>
+    <!-- <include file="example.xml"/> -->
+
+    <!-- Add packages here -->
+
+</struts>

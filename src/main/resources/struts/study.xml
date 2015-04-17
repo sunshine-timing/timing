@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<package name="study" namespace="/" extends="default">
+
+
+		<action name="test" class="com.sunshine.test.action.TestAction">
+			<result name="success" type="freemarker">
+				/WEB-INF/freemarker/success.ftl
+			</result>
+		</action>
+
+		<action name="download" class="com.sunshine.test.action.FileDownAction">
+
+
+			<!-- 对应action中的属性 -->
+			<param name="inputPath">
+				/WEB-INF/UploadFiles/123.zip
+			</param>
+
+			<!-- 使用streamResult结果类型 -->
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<!-- action用于读取下载文件的方法属性，默认inputStream，可以省略 -->
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">
+					${contentDisposition}
+					<!-- filename="commons-fileupload.zip" -->
+				</param>
+				<param name="bufferSize">2048</param>
+
+			</result>
+
+		</action>
+
+
+	</package>
+</struts>

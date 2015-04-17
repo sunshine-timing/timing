@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE validators PUBLIC
+ "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+ "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+	<!-- 针对username字段的校验 -->
+	<field name="username">
+		
+		<!-- 必填字符串 -->
+		<field-validator type="requiredstring">
+			<message key="error.username.required"></message>
+		</field-validator>
+		
+		<!-- 长度，最低4 最长12 -->
+		<field-validator type="stringlength">
+			<param name="minLength">4</param>
+			<param name="maxLength">12</param>
+			<message key="error.username.length"></message>
+		</field-validator>
+		
+	</field>
+	
+</validators>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"  
+ "http://www.springframework.org/dtd/spring-beans.dtd">  
+<beans>
+	<!-- 数据源配置 -->
+	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.common.driver}"></property>
+		<property name="url" value="${jdbc.common.url}"></property>
+		<property name="username" value="${jdbc.common.user}"></property>
+		<property name="password" value="${jdbc.common.passwd}"></property>
+	</bean>
+	
+	
+	<!-- sessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="datasource"></property>
+		<property name="configLocation" value="classpath:sqlMapConfig.xml"></property>
+		<!-- <property  name="mapperLocations"  value="classpath*:com/xxt/ibatis/dbcp/**/*.xml"/>  -->
+	</bean>
+		
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	
+	<bean id="common_daoSupport" class="com.sunshine.common.dao.IDaoSupport">
+		<property name="sessionTemplate" ref="sqlSession"></property>
+	</bean>
+</beans>
