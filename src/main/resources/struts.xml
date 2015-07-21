@@ -53,7 +53,7 @@
         </global-exception-mappings>
 
 			
-        <action name="index" class="com.sunshine.login.user.action.">
+        <action name="index" class="com.sunshine.login.user.action.LoginAction">
             <!-- <result type="redirectAction">
                 <param name="actionName">HelloWorld</param>
                 <param name="namespace">/example</param>
