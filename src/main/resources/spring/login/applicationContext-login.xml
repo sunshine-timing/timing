@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+          "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<bean id="loginDao" class="com.sunshine.login.user.dao.impl.LoginDaoImpl">
+		<property name="daoSupport" ref="common_daoSupport"></property>
+	</bean>
+
+	<bean id="loginService" class="com.sunshine.login.user.service.impl.LoginServiceImpl">
+		<property name="dao" ref="loginDao"></property>
+	</bean>
+
+	<bean id="login" class="com.sunshine.login.user.action.LoginAction">
+		<property name="service" ref="loginService"></property>
+	</bean>
+
+</beans>

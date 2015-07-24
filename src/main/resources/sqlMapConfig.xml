@@ -4,5 +4,6 @@
 <configuration>
     <mappers>
         <!-- <mapper resource="com/mybatis/UserDaoMapper.xml"/> -->
+        <mapper resource="com/**/dao/ibatis-*.xml"/>
     </mappers>
 </configuration>

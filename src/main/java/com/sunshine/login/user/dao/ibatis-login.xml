@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userlogin">
+	<!-- 根据用户账户和密码查询用户信息 -->
+	<select id="qryUser" resultType="com.sunshine.login.user.bean.UserInfoBean" parameterType="java.util.Map">
+		SELECT 	USERID,
+				NAME,
+				EMAIL,
+				ADDRESS,
+				MOBILENO,
+				DEPTNO,
+				ROLEID,
+				LAST_LOGIN as LASTLOGIN
+		FROM 	MSHOP_LOGIN_USER 
+		WHERE 	USERID=#{USERID} 
+		AND 	PASSWD=#{PASSWD} 
+		AND 	STATUS='0'
+	</select>
+</mapper>  

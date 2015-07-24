@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"  
- "http://www.springframework.org/dtd/spring-beans.dtd">  
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+          "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans>
 	<!-- 数据源配置 -->
 	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -14,8 +14,8 @@
 	<!-- sessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="datasource"></property>
-		<property name="configLocation" value="classpath:sqlMapConfig.xml"></property>
-		<!-- <property  name="mapperLocations"  value="classpath*:com/xxt/ibatis/dbcp/**/*.xml"/>  -->
+		<!-- <property name="configLocation" value="classpath:sqlMapConfig.xml"></property>  -->
+		<property  name="mapperLocations"  value="classpath*:com/**/dao/ibatis-*.xml"/>
 	</bean>
 		
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

@@ -5,11 +5,11 @@
 
 <struts>
 		<!-- 配置到struts.properties -->
-  		<!--   
+  		<!--    -->
  		 <constant name="struts.enable.DynamicMethodInvocation" value="false" />
   		 <constant name="struts.devMode" value="true" />
-		 <constant name="struts.objectFactory" value="spring" /> 
-			-->
+		 <constant name="struts.objectFactory" value="spring" />
+			
 	
 	
     <package name="default" namespace="/" extends="struts-default">
@@ -53,7 +53,7 @@
         </global-exception-mappings>
 
 			
-        <action name="index" class="com.sunshine.login.user.action.LoginAction">
+        <action name="ttasdf" class="com.sunshine.login.user.action.LoginAction">
             <!-- <result type="redirectAction">
                 <param name="actionName">HelloWorld</param>
                 <param name="namespace">/example</param>
@@ -74,11 +74,11 @@
             	使用拦截栈
             <interceptor-ref name="loggerAndSecurityStack"></interceptor-ref> -->
         </action>
-        
+         <!-- 
         <action name="login" class="com.sunshine.login.user.action.LoginAction">
         	<result name="success">/login.jsp</result>
         </action>
-        
+         -->
         <action name="reg" class="com.sunshine.login.user.action.RegAction">
         	<result name="success">/index.jsp</result>
         	<result name="invalid.token">
@@ -121,6 +121,7 @@
     </package>
 
 	<include file="struts/study.xml"/>
+	<include file="struts/login/login.xml"/>
 	<include file="struts_validate.xml"/>
     <!-- <include file="example.xml"/> -->
 
