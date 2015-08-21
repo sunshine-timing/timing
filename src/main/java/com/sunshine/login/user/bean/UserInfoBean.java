@@ -7,9 +7,9 @@ import java.io.Serializable;
 
 /**
  * @author sunshine
- *
  */
-public class UserInfoBean implements Serializable {
+public class UserInfoBean implements Serializable
+{
 
 	/**
 	 * 
@@ -28,72 +28,100 @@ public class UserInfoBean implements Serializable {
 
 	private String deptNo;
 
-	private String roleIdd;
+	private String roleId;
 
 	private String lastLogin;
 
-	public String getUserId() {
+	private UserRoleBean userRoleBean;
+
+	public String getUserId()
+	{
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(String userId)
+	{
 		this.userId = userId;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public String getEmail() {
+	public String getEmail()
+	{
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email)
+	{
 		this.email = email;
 	}
 
-	public String getAddress() {
+	public String getAddress()
+	{
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(String address)
+	{
 		this.address = address;
 	}
 
-	public String getMobileNo() {
+	public String getMobileNo()
+	{
 		return mobileNo;
 	}
 
-	public void setMobileNo(String mobileNo) {
+	public void setMobileNo(String mobileNo)
+	{
 		this.mobileNo = mobileNo;
 	}
 
-	public String getDeptNo() {
+	public String getDeptNo()
+	{
 		return deptNo;
 	}
 
-	public void setDeptNo(String deptNo) {
+	public void setDeptNo(String deptNo)
+	{
 		this.deptNo = deptNo;
 	}
 
-	public String getRoleIdd() {
-		return roleIdd;
+	public String getRoleId()
+	{
+		return roleId;
 	}
 
-	public void setRoleIdd(String roleIdd) {
-		this.roleIdd = roleIdd;
+	public void setRoleId(String roleId)
+	{
+		this.roleId = roleId;
 	}
 
-	public String getLastLogin() {
+	public String getLastLogin()
+	{
 		return lastLogin;
 	}
 
-	public void setLastLogin(String lastLogin) {
+	public void setLastLogin(String lastLogin)
+	{
 		this.lastLogin = lastLogin;
+	}
+
+	public UserRoleBean getUserRoleBean()
+	{
+		return userRoleBean;
+	}
+
+	public void setUserRoleBean(UserRoleBean userRoleBean)
+	{
+		this.userRoleBean = userRoleBean;
 	}
 
 }

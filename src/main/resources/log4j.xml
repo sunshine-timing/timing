@@ -3,18 +3,15 @@
 
 <log4j:configuration>
 
- 	<root>       
-         <priority value ="DEBUG"/>       
-         <appender-ref ref="CONSOLE"/>       
-         <appender-ref ref="filelog_appender"/>          
-    </root>  
-	<!-- 设置包限制输出的通道 
-	<category name="com.sunshine.login" additivity="false">
+	<root>
 		<priority value="DEBUG" />
-		<appender-ref ref="filelog_daily" />-->
-		<!-- <appender-ref ref="daily_appender" /> <appender-ref ref="console" 
-			/> <appender-ref ref="ASYNC_test" />
-	</category> -->
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="filelog_appender" />
+	</root>
+	<!-- 设置包限制输出的通道 <category name="com.sunshine.login" additivity="false"> 
+		<priority value="DEBUG" /> <appender-ref ref="filelog_daily" /> -->
+	<!-- <appender-ref ref="daily_appender" /> <appender-ref ref="console" /> 
+		<appender-ref ref="ASYNC_test" /> </category> -->
 
 
 	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
@@ -54,6 +51,30 @@
 				value="[%d{yyyy-MM-dd HH:mm:ss\} %-5p] [%t] (%c:%L) - %m%n" />
 		</layout>
 	</appender>
+
+	<logger name="org.springframework" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="org.springframework.jdbc.core.JdbcTemplate"
+		additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="org.springframework.jdbc.core.StatementCreatorUtils"
+		additivity="false">
+		<level value="TRACE" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="org.mybatis" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="ldg.mybatis" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+	</logger>
 
 
 

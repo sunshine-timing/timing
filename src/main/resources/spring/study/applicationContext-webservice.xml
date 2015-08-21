@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="  
+ http://www.springframework.org/schema/beans   
+ http://www.springframework.org/schema/beans/spring-beans.xsd   
+ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<bean id="greetingServiceImpl" class="com.study.webservice.impl.GreetingServiceImpl">
+	</bean>
+
+	<jaxws:endpoint id="greetingService" implementor="#greetingServiceImpl"
+		address="/Greeting" />
+		
+	<!-- 使用wsdl2java 生成客户端代码（Apache-cxf/bin中命令 -->
+	<jaxws:client id="weather" serviceClass="" address="http://www.webxml.com.cn/WebServices/WeatherWebService.asmx"></jaxws:client>
+
+	<!-- <jaxws:endpoint id="greetingService" implementor="com.gary.test.ws.service.impl.GreetingServiceImpl" 
+		address="/GreetingService" /> -->
+
+</beans>

@@ -16,5 +16,6 @@
 		<!-- 数据源 -->
 		<import resource="spring/applicationContext-*.xml"/>
 		<import resource="spring/login/applicationContext-*.xml"/>
+		<import resource="spring/study/applicationContext-*.xml"/>
 		
 </beans>

@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * @author lenovo
  * 
@@ -25,7 +27,7 @@ public class XssRequestWraper extends HttpServletRequestWrapper {
 		Set<String> keySet = paramMap.keySet();
 		// 迭代
 		for (String str : keySet) {
-
+			
 		}
 		return paramMap;
 	}

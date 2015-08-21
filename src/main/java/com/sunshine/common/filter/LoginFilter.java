@@ -90,19 +90,21 @@ public class LoginFilter extends StrutsPrepareAndExecuteFilter
 
 		// 请求地址
 		String url = request.getServletPath();
-		System.out.println("Filter url:" + url);
+		logger.debug("Filter url:" + url);
 
 		// TODO
-		//url = "/index.action";
+		// url = "/index.action";
 		// 不带请求地址
 		if (crossFilter(url) || session.getAttribute("userInfo") != null)
 		{
+			logger.debug("##################################未过滤的###################");
 			// 正常进行,进行xss过滤
 			arg2.doFilter(new XssRequestWraper((HttpServletRequest) arg0), arg1);
 			// arg2.doFilter(arg0, arg1);
 		} else
 		{
-			response.sendRedirect("/index.jsp");
+			logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^filter redirect:" + request.getContextPath());
+			response.sendRedirect(request.getContextPath());
 		}
 
 	}
@@ -115,7 +117,11 @@ public class LoginFilter extends StrutsPrepareAndExecuteFilter
 	 */
 	private boolean crossFilter(String str)
 	{
-
+		// 标记锚 ,webService 不进行过滤
+		if (str.startsWith("#")||(!str.contains(".")&&str.contains("webservice")))
+		{
+			return true;
+		}
 		if (crossList.contains(str) || crossStyList.contains(str.substring(str.lastIndexOf("."), str.length())))
 		{
 			return true;

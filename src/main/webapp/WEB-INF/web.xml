@@ -67,6 +67,18 @@
 	</filter-mapping>
 	
 
+
+	<!-- WebService 测试学习 -->
+	<servlet>  
+        <servlet-name>webservice</servlet-name>  
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>  
+        <load-on-startup>1</load-on-startup>  
+    </servlet>  
+    <servlet-mapping>  
+        <servlet-name>webservice</servlet-name>  
+        <url-pattern>/webservice/*</url-pattern>  
+    </servlet-mapping>  
+
 	<error-page>
 		<error-code>404</error-code>
 		<location>/error.jsp</location>

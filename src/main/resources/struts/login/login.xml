@@ -7,6 +7,7 @@
 
 	<package name="login" namespace="/" extends="json-default,struts-default">
 
+		<!-- 登陆校验 -->
 		<action name="login" class="login" method="login">
 		<result type="json"></result>  
 			<!-- <result name="success" >
@@ -14,8 +15,19 @@
 			</result> -->
 		</action>
 		
-		<action name="index" class="login" >
-			<result name="success">/index.jsp</result>
+		<!-- 进入主页 -->
+		<action name="index" class="login" method="index" >
+			<result name="success">index.jsp</result>
+		</action>
+		
+		<!-- 获取登陆用于密码加密的公钥 -->
+		<action name="pubKey" class="login" method="pubKey" >
+			<result type="json"></result>  
+		</action>
+		
+		<!-- 查询左侧导航栏 -->
+		<action name="leftMenu" class="login" method="leftMenu" >
+			<result name="success">dycontents.jsp</result>
 		</action>
 	</package>
 </struts>

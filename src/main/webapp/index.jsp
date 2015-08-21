@@ -1,35 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title></title>
+
+<title>后台系统管理</title>
 </head>
 <!-- 样式 -->
 <link href="css/bootstrap.min.css" rel="stylesheet" />
-<link href="css/bootstrap-theme.min.css" rel="stylesheet" />
+<link href="css/index.css" rel="stylesheet" />
+<link href="css/bootstrap-theme.min.css" rel="stylesheet" /><br>
 <style>
-  body {background:url(images/login_bg.jpg) no-repeat center fixed; }
-  .form-signin {max-width:330px;padding:15px;margin:0 auto;margin-top:300px;}
-  .form-signin .form-control { position:relative; height:auto; padding:10px; font-size:16px;}
-  .form-signin input[type="password"] {margin-bottom:10px;}
+	body {background-color:#DBEAF9;}
+	#abcdefg>.active {background-color:#eee;}
+	.loading-mask {height: 100%;width: 100%;position: fixed;_position:fixed;opacity:0.5; filter: alpha(opacity=50);left:0;top:0;z-index:99999;background-color: #000; display: none;}
+	.mprogress_bar {width:60%;margin-left:20%;position:fixed;top:40%;}
 </style>
 <body>
 
 <div class="container">
+	<div id="header" style="background:url(images/top_logo.jpg) no-repeat  -22em -5em;height:10em;	">
+    </div>
+    
+    <!--顶部导航-->
+    <div class="navbar-collapse collapse navbar-inverse" name="topModules" >  
+             <ul class="nav navbar-nav">
+               <li class="menuItem active"><a href="javascript:void(0);">主页</a></li>
+	               <c:forEach items="${topModules}" var="module">
+	               	<li class="menuItem" onclick="moduleChange(this,${module.moduleId})"><a href="javascript:void(0);">${module.moduleName}</a></li>    
+	               </c:forEach>  
+             </ul>  
+     </div>
 	
-    <form class="form-signin">
-    	<label for="userid" class="sr-only"></label><input type="text" id="username" name="username" placeholder="" class="form-control"  required autofocus />
-        <br/>
-        <label for="passwd" class="sr-only"></label><input type="password" id="passwd" name="passwd" placeholder=""  class="form-control"  required />
-        <button class="btn btn-lg btn-block btn-primary" type="submit"></button>
-    </form>
-
+	<div id="index_Dycontent">
+		<jsp:include page="user_index.jsp" flush="true"></jsp:include>
+	</div>
+	
+	<!-- 遮罩层 -->
+	<div id="loading-mask" class="loading-mask">
+	
+       <div class="progress mprogress_bar">
+           <div class="progress-bar progress-bar-info" role="progressbar"
+              aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 
+              style="width: 20%;">
+           </div>
+    	</div>
+    
+	</div>
+	
+	
 </div>
 
 <!--js-->
 <script src="js/jquery-1.11.2.min.js" ></script>
 <script src="js/bootstrap.min.js" ></script>
 <script src="js/npm.js" ></script>
+<script src="js/html5shiv.min.js" ></script>
+
+<script type="text/javascript">
+var progressData =0;
+/*
+ * 加载模块，并绑定切换样式和事件 
+ */
+function moduleChange(obj,moduleId)
+{
+	$('[role=progressbar]').css('width',progressData+'%');
+	$("#index_Dycontent").load("leftMenu.action",{moduleId:moduleId},function(response,status,xhr){
+		//进度40，并清除调度任务
+		progressData=60;
+		$('[role=progressbar]').css('width',progressData+'%');
+		
+		//加载完成后，绑定样式和事件
+		$(".nav_class1>li").bind('click',function(){
+			$(this).addClass('active_nav1').siblings().removeClass('active_nav1');
+			
+				//加载第一个子菜单
+				$("div[name=index_menu_url]").load($(this).attr("id"),function(response,status,xhrb){
+					//进度30，并清除调度任务
+					progressData=100;
+					$('[role=progressbar]').css('width',progressData+'%');
+					
+					
+				});
+				
+		});
+
+		//顶部导航栏 样式切换
+		$(obj).addClass("active").siblings().removeClass("active");
+			
+	});
+	
+}
+
+</script>
 </body>
 </html>

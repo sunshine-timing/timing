@@ -31,5 +31,10 @@ public class CommonUtils
 		}
 		return builder.toString();
 	}
+	
+	public static void main(String[] args)
+	{
+		System.out.println(getUUID());
+	}
 
 }

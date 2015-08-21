@@ -4,6 +4,36 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="userlogin">
+
+	<!-- 用户角色 -->
+	<resultMap type="com.sunshine.login.user.bean.UserRoleBean" id="userRoleBean">  
+		<result column="role_id" property="roleId"/>  
+		<result column="role_name" property="roleName"/>  
+		<collection property="authList" ofType="com.sunshine.login.user.bean.UserAuthBean" column="role_id">  
+		    <result column="auth_id" property="authId"/>  
+		    <result column="auth_name" property="authName"/>  
+		    <result column="menu_id" property="menuId"/>  
+		    <result column="url_status" property="urlStatus"/>  
+		    <result column="module_id" property="moduleId"/>  
+		    <result column="url" property="url"/>  
+		</collection>  
+	</resultMap>
+	
+	<!-- 左侧导航栏查询 -->
+	<resultMap type="com.sunshine.login.user.bean.LeftMenuBean" id="leftMenuBean">  
+		<result column="MENU_ID" property="menuId"/>  
+		<result column="MENU_NAME" property="menuName"/>
+ 		<collection property="subMenuBeans" ofType="com.sunshine.login.user.bean.LeftSubMenuBean" column="MENU_ID" select="userlogin.qrySubLeftMenu" />  
+	</resultMap>
+	
+	<!-- 左侧导航栏子菜单查询 -->
+	<resultMap type="com.sunshine.login.user.bean.LeftSubMenuBean" id="subMenuList">  
+		    <result column="SUB_MENU_ID" property="menuId"/>  
+		    <result column="SUB_MENU_NAME" property="menuName"/>  
+		    <result column="SUB_MENU_URL" property="menuUrl"/>  
+	</resultMap>
+	
+	
 	<!-- 根据用户账户和密码查询用户信息 -->
 	<select id="qryUser" resultType="com.sunshine.login.user.bean.UserInfoBean" parameterType="java.util.Map">
 		SELECT 	USERID,
@@ -19,4 +49,104 @@
 		AND 	PASSWD=#{PASSWD} 
 		AND 	STATUS='0'
 	</select>
+	
+	<!-- 根据用户账户和密码查询用户信息 -->
+	<select id="qryRoleInfo" resultMap="userRoleBean" parameterType="string">
+		SELECT 	R.ROLE_ID,
+				R.ROLE_NAME,
+				A.AUTH_ID,
+				A.AUTH_NAME,
+				A.MENU_ID,
+				A.URL_STATUS,
+				A.MODULE_ID,
+				A.URL 
+		FROM 	MSHOP_LOGIN_ROLE R,
+				MSHOP_ROLE_AUTH P,
+				MSHOP_LOGIN_AUTHORIZATION A
+		WHERE 	P.STATUS='0'
+		AND 	R.STATUS='0'
+		AND 	R.ROLE_ID=P.ROLE_ID
+		AND 	P.AUTH_ID=A.AUTH_ID 
+		AND 	P.ROLE_ID=#{roleId} 
+	</select>
+	
+	<!-- 查询用户对应的顶部模块信息 -->
+	<select id="qryTopModules" resultType="com.sunshine.login.user.bean.TopModuleBean" parameterType="collection">
+		SELECT 	MODULE_ID AS moduleId,
+				MODULE_SORT as moduleSort,
+				MODULE_NAME as moduleName
+		FROM 	MSHOP_MENU_TOP
+		WHERE 	MODULE_ID IN
+		<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		ORDER BY MODULE_SORT
+	</select>
+	
+	<!-- 更新用户最后登录时间 -->
+	<update id="updateLastLogin" parameterType="string">
+		update mshop_login_user set last_login=sysdate where userid=#{userid}
+	</update>
+	
+	<!-- 查询模块对应的菜单项，并进行权限过滤 -->
+	<select id="qryLeftMenu" resultMap="leftMenuBean" parameterType="java.util.Map">
+		SELECT 	M.MENU_ID AS menuId,
+				MENU_CLASS AS menuClass,
+				MENU_NAME AS menuName
+		FROM 	MSHOP_COMMON_MENU  M 
+		WHERE 	M.MODULE_ID=#{moduleId}
+		AND		M.MENU_STATUS='0' 
+		AND 	M.MENU_CLASS='0'
+		AND EXISTS (
+			SELECT 	1 
+			FROM 	MSHOP_ROLE_AUTH AU,
+					MSHOP_LOGIN_AUTHORIZATION AN 
+			WHERE 	AU.AUTH_ID=AN.AUTH_ID 
+			AND 	M.MENU_ID=AN.MENU_ID 
+			AND 	AU.ROLE_ID=#{roleId})
+		ORDER BY MENU_SORT
+	</select>
+	
+	<!-- 查询模块对应的子菜单项，并进行权限过滤 -->
+	<select id="qrySubLeftMenu" resultMap="subMenuList"  parameterType="string">
+		SELECT 	M.MENU_ID AS menuId,
+				MENU_URL AS menuUrl,
+				MENU_CLASS AS menuClass,
+				MENU_NAME AS menuName
+		FROM 	MSHOP_COMMON_MENU  M 
+		WHERE 	M.FATHER_MENU=#{MENU_ID}
+		AND		M.MENU_STATUS='0' 
+		AND 	M.MENU_CLASS='1'
+		AND EXISTS (
+			SELECT 	1 
+			FROM 	MSHOP_ROLE_AUTH AU,
+					MSHOP_LOGIN_AUTHORIZATION AN 
+			WHERE 	AU.AUTH_ID=AN.AUTH_ID 
+			AND 	M.MENU_ID=AN.MENU_ID 
+			AND 	AU.ROLE_ID='1001')
+		ORDER BY MENU_SORT
+	</select>
+	
+	<!-- 查询模块对应的子菜单项，并进行权限过滤-->
+	<select id="qryLeftMenuJson" resultMap="leftMenuBean" parameterType="java.util.Map">
+	SELECT 		M.MENU_ID,
+				M.MENU_NAME 
+	FROM 		MSHOP_COMMON_MENU M
+	WHERE 		M.MODULE_ID=${moduleId}
+  AND EXISTS (
+			SELECT 	1 
+			FROM 	MSHOP_ROLE_AUTH AU,
+					MSHOP_LOGIN_AUTHORIZATION AN 
+			WHERE 	AU.AUTH_ID=AN.AUTH_ID 
+			AND 	M.MENU_ID=AN.MENU_ID 
+			AND 	AU.ROLE_ID=${roleId})
+	START WITH 	FATHER_MENU IS NULL
+	CONNECT BY 	PRIOR MENU_ID=FATHER_MENU
+	</select> 
+	
+	<!-- 测试语句，删除-->
+	<select id="qryTestSql" >
+		select 1 from dual
+	</select>
+	
 </mapper>  

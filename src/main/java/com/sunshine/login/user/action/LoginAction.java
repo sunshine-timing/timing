@@ -2,15 +2,26 @@ package com.sunshine.login.user.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.interfaces.RSAPublicKey;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
+import com.common.utils.encry.AESUtils;
+import com.common.utils.encry.RSAUtils;
+import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.sunshine.login.user.bean.LeftMenuBean;
+import com.sunshine.login.user.bean.TopModuleBean;
 import com.sunshine.login.user.bean.UserInfoBean;
+import com.sunshine.login.user.bean.UserRoleBean;
 import com.sunshine.login.user.service.ILoginService;
 
 public class LoginAction extends ActionSupport
@@ -41,6 +52,16 @@ public class LoginAction extends ActionSupport
 	 */
 	private ILoginService service;
 
+	/*
+	 * 左侧菜单列表
+	 */
+	private List<LeftMenuBean> leftMenuBeans;
+
+	/**
+	 * 登陆请求 校验密码
+	 * 
+	 * @return
+	 */
 	public String login()
 	{
 		PrintWriter out = null;
@@ -50,15 +71,16 @@ public class LoginAction extends ActionSupport
 			HttpServletResponse response = ServletActionContext.getResponse();
 			response.setCharacterEncoding("UTF-8");
 			out = response.getWriter();
-			logger.info("login action 获取：" + userid);
-			System.out.println("*************************************************");
+			logger.info("login action 获取：" + userid + ";passwd:" + passwd);
+			passwd = RSAUtils.decryptStringByJs(passwd);
+			logger.debug("passwd解密后：" + passwd);
 			// 账户或密码为空
 			if (StringUtils.isBlank(userid) || StringUtils.isBlank(passwd))
 			{
 				out.write("empty");
 			} else
 			{
-				UserInfoBean userInfoBean = service.getUserInfo(userid, passwd);
+				UserInfoBean userInfoBean = service.getUserInfo(userid, AESUtils.encrypt(passwd));
 				// 登陆失败账户或密码错误
 				if (null == userInfoBean)
 				{
@@ -67,13 +89,17 @@ public class LoginAction extends ActionSupport
 				{
 					// 登陆状态记录到session中
 					ServletActionContext.getRequest().getSession().setAttribute("userInfo", userInfoBean);
+					// 更新最后登录时间
+					service.updateLastLogin(userid);
 					out.write("success");
 				}
 			}
 
 		} catch (IOException e)
 		{
-			// e.printStackTrace();
+			logger.error("登陆账号密码校验异常：", e);
+		} catch (Exception e)
+		{
 			logger.error("登陆账号密码校验异常：", e);
 		} finally
 		{
@@ -87,13 +113,88 @@ public class LoginAction extends ActionSupport
 	}
 
 	/**
-	 * 登陆管理主页面
+	 * 查询用户角色权限以及页面初始化相关
 	 * 
 	 * @return
 	 */
-	public String Index()
+	public String index()
 	{
 		// TODO:主页相关查询，角色菜单项，提醒，统计信息等
+
+		// 获取权限信息
+		logger.debug("index.action===");
+		UserInfoBean userInfoBean = (UserInfoBean) ServletActionContext.getRequest().getSession()
+		        .getAttribute("userInfo");
+		logger.debug("index.user role id=" + userInfoBean.getRoleId());
+		UserRoleBean userRoleBean = service.getUserRole(userInfoBean.getRoleId());
+		userInfoBean.setUserRoleBean(userRoleBean);
+
+		// 缓存顶部菜单
+		List<TopModuleBean> topModuleBeans = service.getUserTopModule(userInfoBean);
+		logger.debug("topModuleBeans.size:" + topModuleBeans.size());
+		ServletActionContext.getRequest().getSession().setAttribute("topModules", topModuleBeans);
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 获取登陆的加密key
+	 * 
+	 * @return
+	 */
+	public String pubKey()
+	{
+		logger.debug("start get keypair....");
+		RSAPublicKey publicKey = RSAUtils.getDefaultPublicKey();
+		PrintWriter out = null;
+		try
+		{
+			logger.debug("start get pubkey....");
+			// 获取response对象，并设定字符集
+			HttpServletResponse response = ServletActionContext.getResponse();
+			response.setCharacterEncoding("UTF-8");
+			out = response.getWriter();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("modulus", new String(Hex.encodeHex(publicKey.getModulus().toByteArray())));
+			map.put("exponent", new String(Hex.encodeHex(publicKey.getPublicExponent().toByteArray())));
+			logger.debug("object to json");
+			Gson gson = new Gson();
+			out.write(gson.toJson(map));
+			logger.debug("write json end");
+
+		} catch (IOException e)
+		{
+			// e.printStackTrace();
+			logger.error("登陆加密公钥获取失败：", e);
+		} finally
+		{
+			if (null != out)
+			{
+				out.flush();
+				out.close();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 查询该用户在该模块下可查看的菜单信息
+	 * 
+	 * @return
+	 */
+	public String leftMenu()
+	{
+		// 获取模块编码
+		String moduleId = ServletActionContext.getRequest().getParameter("moduleId");
+
+		// 获取用户角色编码
+		UserInfoBean userInfoBean = (UserInfoBean) ServletActionContext.getRequest().getSession()
+		        .getAttribute("userInfo");
+		// 查询该模块下的菜单列表
+		leftMenuBeans = service.qryLeftMenuList(moduleId, userInfoBean.getRoleId());
+		
+		logger.debug("leftMenuBeans.size:"+leftMenuBeans.size());
+		logger.debug("leftMenuBeans.subbean:"+leftMenuBeans.get(0).getSubMenuBeans());
 		return SUCCESS;
 	}
 
@@ -132,6 +233,23 @@ public class LoginAction extends ActionSupport
 	public void setService(ILoginService service)
 	{
 		this.service = service;
+	}
+
+	/**
+	 * @return the leftMenuBeans
+	 */
+	public List<LeftMenuBean> getLeftMenuBeans()
+	{
+		return leftMenuBeans;
+	}
+
+	/**
+	 * @param leftMenuBeans
+	 *            the leftMenuBeans to set
+	 */
+	public void setLeftMenuBeans(List<LeftMenuBean> leftMenuBeans)
+	{
+		this.leftMenuBeans = leftMenuBeans;
 	}
 
 }
