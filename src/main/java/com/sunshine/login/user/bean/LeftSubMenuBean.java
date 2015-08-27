@@ -33,6 +33,16 @@ public class LeftSubMenuBean implements Serializable
 	 */
 	private String menuName;
 
+	/*
+	 * 菜单层级
+	 */
+	private String menuClass;
+
+	/*
+	 * 父菜单编码
+	 */
+	private String fatherMenu;
+
 	public String getMenuId()
 	{
 		return menuId;
@@ -61,6 +71,40 @@ public class LeftSubMenuBean implements Serializable
 	public void setMenuName(String menuName)
 	{
 		this.menuName = menuName;
+	}
+
+	/**
+	 * @return the menuClass
+	 */
+	public String getMenuClass()
+	{
+		return menuClass;
+	}
+
+	/**
+	 * @param menuClass
+	 *            the menuClass to set
+	 */
+	public void setMenuClass(String menuClass)
+	{
+		this.menuClass = menuClass;
+	}
+
+	/**
+	 * @return the fatherMenu
+	 */
+	public String getFatherMenu()
+	{
+		return fatherMenu;
+	}
+
+	/**
+	 * @param fatherMenu
+	 *            the fatherMenu to set
+	 */
+	public void setFatherMenu(String fatherMenu)
+	{
+		this.fatherMenu = fatherMenu;
 	}
 
 }

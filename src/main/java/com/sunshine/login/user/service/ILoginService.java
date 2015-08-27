@@ -52,12 +52,4 @@ public interface ILoginService
 	 */
 	public void updateLastLogin(String userId);
 
-	/**
-	 * 根据模块编码和角色编码，查询该角色对应模块下的拥有权限的菜单信息
-	 * 
-	 * @param moduleId 模块编码
-	 * @param roleId 角色编码
-	 * @return
-	 */
-	public List<LeftMenuBean> qryLeftMenuList(String moduleId, String roleId);
 }

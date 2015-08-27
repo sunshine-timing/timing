@@ -31,7 +31,7 @@
     <!--顶部导航-->
     <div class="navbar-collapse collapse navbar-inverse" name="topModules" >  
              <ul class="nav navbar-nav">
-               <li class="menuItem active"><a href="javascript:void(0);">主页</a></li>
+               <li class="menuItem active" onclick="home_index()"><a href="javascript:void(0);">主页</a></li>
 	               <c:forEach items="${topModules}" var="module">
 	               	<li class="menuItem" onclick="moduleChange(this,${module.moduleId})"><a href="javascript:void(0);">${module.moduleName}</a></li>    
 	               </c:forEach>  
@@ -63,41 +63,7 @@
 <script src="js/npm.js" ></script>
 <script src="js/html5shiv.min.js" ></script>
 
-<script type="text/javascript">
-var progressData =0;
-/*
- * 加载模块，并绑定切换样式和事件 
- */
-function moduleChange(obj,moduleId)
-{
-	$('[role=progressbar]').css('width',progressData+'%');
-	$("#index_Dycontent").load("leftMenu.action",{moduleId:moduleId},function(response,status,xhr){
-		//进度40，并清除调度任务
-		progressData=60;
-		$('[role=progressbar]').css('width',progressData+'%');
-		
-		//加载完成后，绑定样式和事件
-		$(".nav_class1>li").bind('click',function(){
-			$(this).addClass('active_nav1').siblings().removeClass('active_nav1');
-			
-				//加载第一个子菜单
-				$("div[name=index_menu_url]").load($(this).attr("id"),function(response,status,xhrb){
-					//进度30，并清除调度任务
-					progressData=100;
-					$('[role=progressbar]').css('width',progressData+'%');
-					
-					
-				});
-				
-		});
-
-		//顶部导航栏 样式切换
-		$(obj).addClass("active").siblings().removeClass("active");
-			
-	});
-	
-}
-
-</script>
+<!-- 自定义js -->
+<script src="js/mshop/index.js" ></script>
 </body>
 </html>

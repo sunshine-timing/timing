@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Hex;
@@ -18,7 +19,6 @@ import com.common.utils.encry.AESUtils;
 import com.common.utils.encry.RSAUtils;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
-import com.sunshine.login.user.bean.LeftMenuBean;
 import com.sunshine.login.user.bean.TopModuleBean;
 import com.sunshine.login.user.bean.UserInfoBean;
 import com.sunshine.login.user.bean.UserRoleBean;
@@ -53,9 +53,14 @@ public class LoginAction extends ActionSupport
 	private ILoginService service;
 
 	/*
-	 * 左侧菜单列表
+	 * request
 	 */
-	private List<LeftMenuBean> leftMenuBeans;
+	HttpServletRequest request;
+
+	/*
+	 * response
+	 */
+	HttpServletResponse response;
 
 	/**
 	 * 登陆请求 校验密码
@@ -68,9 +73,8 @@ public class LoginAction extends ActionSupport
 		try
 		{
 			// 获取response对象，并设定字符集
-			HttpServletResponse response = ServletActionContext.getResponse();
-			response.setCharacterEncoding("UTF-8");
-			out = response.getWriter();
+			getRequest().setCharacterEncoding("UTF-8");
+			out = getResponse().getWriter();
 			logger.info("login action 获取：" + userid + ";passwd:" + passwd);
 			passwd = RSAUtils.decryptStringByJs(passwd);
 			logger.debug("passwd解密后：" + passwd);
@@ -124,7 +128,7 @@ public class LoginAction extends ActionSupport
 		// 获取权限信息
 		logger.debug("index.action===");
 		UserInfoBean userInfoBean = (UserInfoBean) ServletActionContext.getRequest().getSession()
-		        .getAttribute("userInfo");
+				.getAttribute("userInfo");
 		logger.debug("index.user role id=" + userInfoBean.getRoleId());
 		UserRoleBean userRoleBean = service.getUserRole(userInfoBean.getRoleId());
 		userInfoBean.setUserRoleBean(userRoleBean);
@@ -151,9 +155,8 @@ public class LoginAction extends ActionSupport
 		{
 			logger.debug("start get pubkey....");
 			// 获取response对象，并设定字符集
-			HttpServletResponse response = ServletActionContext.getResponse();
-			response.setCharacterEncoding("UTF-8");
-			out = response.getWriter();
+			getResponse().setCharacterEncoding("UTF-8");
+			out = getResponse().getWriter();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("modulus", new String(Hex.encodeHex(publicKey.getModulus().toByteArray())));
 			map.put("exponent", new String(Hex.encodeHex(publicKey.getPublicExponent().toByteArray())));
@@ -178,23 +181,24 @@ public class LoginAction extends ActionSupport
 	}
 
 	/**
-	 * 查询该用户在该模块下可查看的菜单信息
+	 * 筛选对应子菜单
 	 * 
 	 * @return
 	 */
 	public String leftMenu()
 	{
-		// 获取模块编码
-		String moduleId = ServletActionContext.getRequest().getParameter("moduleId");
-
-		// 获取用户角色编码
-		UserInfoBean userInfoBean = (UserInfoBean) ServletActionContext.getRequest().getSession()
-		        .getAttribute("userInfo");
-		// 查询该模块下的菜单列表
-		leftMenuBeans = service.qryLeftMenuList(moduleId, userInfoBean.getRoleId());
-		
-		logger.debug("leftMenuBeans.size:"+leftMenuBeans.size());
-		logger.debug("leftMenuBeans.subbean:"+leftMenuBeans.get(0).getSubMenuBeans());
+		String moduleId = getRequest().getParameter("moduleId");
+		@SuppressWarnings("unchecked")
+		List<TopModuleBean> topModuleBeans = (List<TopModuleBean>) ServletActionContext.getRequest().getSession()
+				.getAttribute("topModules");
+		for (TopModuleBean topModuleBean : topModuleBeans)
+		{
+			if (topModuleBean.getModuleId().equals(moduleId))
+			{
+				getRequest().setAttribute("leftMenuBeans", topModuleBean.getLeftMenuBeans());
+				break;
+			}
+		}
 		return SUCCESS;
 	}
 
@@ -236,20 +240,19 @@ public class LoginAction extends ActionSupport
 	}
 
 	/**
-	 * @return the leftMenuBeans
+	 * @return the request
 	 */
-	public List<LeftMenuBean> getLeftMenuBeans()
+	public HttpServletRequest getRequest()
 	{
-		return leftMenuBeans;
+		return ServletActionContext.getRequest();
 	}
 
 	/**
-	 * @param leftMenuBeans
-	 *            the leftMenuBeans to set
+	 * @return the response
 	 */
-	public void setLeftMenuBeans(List<LeftMenuBean> leftMenuBeans)
+	public HttpServletResponse getResponse()
 	{
-		this.leftMenuBeans = leftMenuBeans;
+		return ServletActionContext.getResponse();
 	}
 
 }

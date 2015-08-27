@@ -17,6 +17,7 @@ td {margin:0;padding:0;}
 dl {margin:0;padding:0;}
 dd {margin:0;padding:0;}
 dt {margin:0;padding:0;}
+iframe {margin:0;padding:0;border:none;} 
 /** 左侧导航栏样式 **/
 .nav_class1 {background-color:#CFF;}
 .nav_class1 > li {line-height:2em;padding-right:0;padding-left:0;border:#330 solid 0.1em; border-collapse:collapse;}

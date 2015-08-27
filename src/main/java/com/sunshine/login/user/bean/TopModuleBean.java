@@ -4,9 +4,11 @@
 package com.sunshine.login.user.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 顶部模块信息
+ * 
  * @author sunshine
  */
 public class TopModuleBean implements Serializable
@@ -31,6 +33,11 @@ public class TopModuleBean implements Serializable
 	 * 排序
 	 */
 	private String moduleSort;
+
+	/*
+	 * 左侧菜单栏
+	 */
+	private List<LeftMenuBean> leftMenuBeans;
 
 	public String getModuleId()
 	{
@@ -60,6 +67,16 @@ public class TopModuleBean implements Serializable
 	public void setModuleSort(String moduleSort)
 	{
 		this.moduleSort = moduleSort;
+	}
+
+	public List<LeftMenuBean> getLeftMenuBeans()
+	{
+		return leftMenuBeans;
+	}
+
+	public void setLeftMenuBeans(List<LeftMenuBean> leftMenuBeans)
+	{
+		this.leftMenuBeans = leftMenuBeans;
 	}
 
 }

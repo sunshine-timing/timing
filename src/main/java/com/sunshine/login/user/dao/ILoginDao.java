@@ -5,7 +5,7 @@ package com.sunshine.login.user.dao;
 
 import java.util.List;
 
-import com.sunshine.login.user.bean.LeftMenuBean;
+import com.sunshine.login.user.bean.LeftSubMenuBean;
 import com.sunshine.login.user.bean.TopModuleBean;
 import com.sunshine.login.user.bean.UserInfoBean;
 import com.sunshine.login.user.bean.UserRoleBean;
@@ -60,13 +60,6 @@ public interface ILoginDao
 	 * @param roleId
 	 * @return
 	 */
-	public List<LeftMenuBean> qryLeftMenu(String moduleId, String roleId);
-	
-	/**
-	 * 
-	 * @param moduleId
-	 * @param roleId
-	 * @return
-	 */
-	public List<LeftMenuBean> qryLeftMenuXml(String moduleId,String roleId);
+	public List<LeftSubMenuBean> qryLeftMenu(String moduleId, String roleId);
+
 }

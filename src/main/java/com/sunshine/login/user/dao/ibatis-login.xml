@@ -20,19 +20,13 @@
 	</resultMap>
 	
 	<!-- 左侧导航栏查询 -->
-	<resultMap type="com.sunshine.login.user.bean.LeftMenuBean" id="leftMenuBean">  
+	<resultMap type="com.sunshine.login.user.bean.LeftSubMenuBean" id="leftMenuBean">  
 		<result column="MENU_ID" property="menuId"/>  
+		<result column="MENU_CLASS" property="menuClass"/>
+		<result column="MENU_URL" property="menuUrl"/>
+		<result column="FATHER_MENU" property="fatherMenu"/>
 		<result column="MENU_NAME" property="menuName"/>
- 		<collection property="subMenuBeans" ofType="com.sunshine.login.user.bean.LeftSubMenuBean" column="MENU_ID" select="userlogin.qrySubLeftMenu" />  
 	</resultMap>
-	
-	<!-- 左侧导航栏子菜单查询 -->
-	<resultMap type="com.sunshine.login.user.bean.LeftSubMenuBean" id="subMenuList">  
-		    <result column="SUB_MENU_ID" property="menuId"/>  
-		    <result column="SUB_MENU_NAME" property="menuName"/>  
-		    <result column="SUB_MENU_URL" property="menuUrl"/>  
-	</resultMap>
-	
 	
 	<!-- 根据用户账户和密码查询用户信息 -->
 	<select id="qryUser" resultType="com.sunshine.login.user.bean.UserInfoBean" parameterType="java.util.Map">
@@ -90,13 +84,14 @@
 	
 	<!-- 查询模块对应的菜单项，并进行权限过滤 -->
 	<select id="qryLeftMenu" resultMap="leftMenuBean" parameterType="java.util.Map">
-		SELECT 	M.MENU_ID AS menuId,
-				MENU_CLASS AS menuClass,
-				MENU_NAME AS menuName
+		SELECT 	M.MENU_ID AS MENUID,
+				MENU_CLASS AS MENUCLASS,
+				MENU_URL AS MENUURL,
+				FATHER_MENU AS FATHERMENU,
+				MENU_NAME AS MENUNAME
 		FROM 	MSHOP_COMMON_MENU  M 
 		WHERE 	M.MODULE_ID=#{moduleId}
 		AND		M.MENU_STATUS='0' 
-		AND 	M.MENU_CLASS='0'
 		AND EXISTS (
 			SELECT 	1 
 			FROM 	MSHOP_ROLE_AUTH AU,
@@ -107,46 +102,5 @@
 		ORDER BY MENU_SORT
 	</select>
 	
-	<!-- 查询模块对应的子菜单项，并进行权限过滤 -->
-	<select id="qrySubLeftMenu" resultMap="subMenuList"  parameterType="string">
-		SELECT 	M.MENU_ID AS menuId,
-				MENU_URL AS menuUrl,
-				MENU_CLASS AS menuClass,
-				MENU_NAME AS menuName
-		FROM 	MSHOP_COMMON_MENU  M 
-		WHERE 	M.FATHER_MENU=#{MENU_ID}
-		AND		M.MENU_STATUS='0' 
-		AND 	M.MENU_CLASS='1'
-		AND EXISTS (
-			SELECT 	1 
-			FROM 	MSHOP_ROLE_AUTH AU,
-					MSHOP_LOGIN_AUTHORIZATION AN 
-			WHERE 	AU.AUTH_ID=AN.AUTH_ID 
-			AND 	M.MENU_ID=AN.MENU_ID 
-			AND 	AU.ROLE_ID='1001')
-		ORDER BY MENU_SORT
-	</select>
-	
-	<!-- 查询模块对应的子菜单项，并进行权限过滤-->
-	<select id="qryLeftMenuJson" resultMap="leftMenuBean" parameterType="java.util.Map">
-	SELECT 		M.MENU_ID,
-				M.MENU_NAME 
-	FROM 		MSHOP_COMMON_MENU M
-	WHERE 		M.MODULE_ID=${moduleId}
-  AND EXISTS (
-			SELECT 	1 
-			FROM 	MSHOP_ROLE_AUTH AU,
-					MSHOP_LOGIN_AUTHORIZATION AN 
-			WHERE 	AU.AUTH_ID=AN.AUTH_ID 
-			AND 	M.MENU_ID=AN.MENU_ID 
-			AND 	AU.ROLE_ID=${roleId})
-	START WITH 	FATHER_MENU IS NULL
-	CONNECT BY 	PRIOR MENU_ID=FATHER_MENU
-	</select> 
-	
-	<!-- 测试语句，删除-->
-	<select id="qryTestSql" >
-		select 1 from dual
-	</select>
 	
 </mapper>  

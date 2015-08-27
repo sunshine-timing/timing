@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sunshine.common.dao.IDaoSupport;
-import com.sunshine.login.user.bean.LeftMenuBean;
+import com.sunshine.login.user.bean.LeftSubMenuBean;
 import com.sunshine.login.user.bean.TopModuleBean;
 import com.sunshine.login.user.bean.UserInfoBean;
 import com.sunshine.login.user.bean.UserRoleBean;
@@ -101,20 +101,12 @@ public class LoginDaoImpl implements ILoginDao
 	 * @return
 	 */
 	@Override
-	public List<LeftMenuBean> qryLeftMenu(String moduleId, String roleId)
+	public List<LeftSubMenuBean> qryLeftMenu(String moduleId, String roleId)
 	{
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("moduleId", moduleId);
 		map.put("roleId", roleId);
-		return (List<LeftMenuBean>) daoSupport.queryList("userlogin.qryLeftMenu", map);
+		return (List<LeftSubMenuBean>) daoSupport.queryList("userlogin.qryLeftMenu", map);
 	}
 
-	@Override
-	public List<LeftMenuBean> qryLeftMenuXml(String moduleId, String roleId)
-	{
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("moduleId", moduleId);
-		map.put("roleId", roleId);
-		return (List<LeftMenuBean>) daoSupport.queryList("userlogin.qryLeftMenuJson", map);
-	}
 }
