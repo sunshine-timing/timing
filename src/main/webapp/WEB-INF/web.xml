@@ -39,6 +39,20 @@
   			org.springframework.web.context.ContextLoaderListener
   		</listener-class>
   	</listener>
+  	
+  	 <!-- 信息安全审核 -->  
+    <filter>  
+        <filter-name>XSSFiler</filter-name>  
+        <filter-class>  
+            com.sunshine.common.xss.XSSSecurityFilter  
+        </filter-class>  
+        <init-param>  
+            <param-name>securityconfig</param-name>  
+            <param-value>  
+                /WEB-INF/classes/xss_security_config.xml  
+            </param-value>  
+        </init-param>  
+    </filter>
 	
 	<!-- 自定义过滤器 -->
 	<filter>
@@ -60,6 +74,19 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
+	<!-- xss过滤 -->
+	 <filter-mapping>  
+        <filter-name>XSSFiler</filter-name>  
+        <url-pattern>*.jsp</url-pattern>  
+    </filter-mapping>  
+    <filter-mapping>  
+        <filter-name>XSSFiler</filter-name>  
+        <url-pattern>*.do</url-pattern>  
+    </filter-mapping>
+    <filter-mapping>  
+        <filter-name>XSSFiler</filter-name>  
+        <url-pattern>*.action</url-pattern>  
+    </filter-mapping>
 	
 	<filter-mapping>
 		<filter-name>struts2</filter-name>

@@ -26,7 +26,7 @@ body {
 <body onload="menuLoaded()">
 
 	<!-- 左右分割3:9 -->
-	<div class="row" style="position:relative;">
+	<div class="row" id="index_body_div" >
 
 		<!-- 左侧菜单导航 -->
 		<div class="col-md-3">
@@ -71,6 +71,12 @@ body {
 		</div>
 	</div>
 
-
+<script type="text/javascript">
+	alert($("#index_body_div").offset().top);
+	alert(parent.document.body.clientHeight);
+	var index_content_height = parent.document.body.clientHeight-$("#index_body_div").offset().top;
+	alert(index_content_height);
+	$("[name=index_menu_url]").css("height",index_content_height);
+</script>
 </body>
 </html>

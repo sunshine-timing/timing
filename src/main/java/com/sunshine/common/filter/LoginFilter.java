@@ -76,11 +76,11 @@ public class LoginFilter extends StrutsPrepareAndExecuteFilter
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 * javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
-	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
-	        throws IOException, ServletException
+	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2) throws IOException, ServletException
 	{
 
 		HttpServletRequest request = (HttpServletRequest) arg0;
@@ -98,9 +98,7 @@ public class LoginFilter extends StrutsPrepareAndExecuteFilter
 		if (crossFilter(url) || session.getAttribute("userInfo") != null)
 		{
 			logger.debug("##################################未过滤的###################");
-			// 正常进行,进行xss过滤
-			arg2.doFilter(new XssRequestWraper((HttpServletRequest) arg0), arg1);
-			// arg2.doFilter(arg0, arg1);
+			arg2.doFilter(arg0, arg1);
 		} else
 		{
 			logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^filter redirect:" + request.getContextPath());
@@ -118,7 +116,7 @@ public class LoginFilter extends StrutsPrepareAndExecuteFilter
 	private boolean crossFilter(String str)
 	{
 		// 标记锚 ,webService 不进行过滤
-		if (str.startsWith("#")||(!str.contains(".")&&str.contains("webservice")))
+		if (str.startsWith("#") || (!str.contains(".") && str.contains("webservice")))
 		{
 			return true;
 		}

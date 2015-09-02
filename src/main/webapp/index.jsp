@@ -25,7 +25,7 @@
 <body>
 
 <div class="container">
-	<div id="header" style="background:url(images/top_logo.jpg) no-repeat  -22em -5em;height:10em;	">
+	<div id="header" style="background:url(images/top_logo.jpg) no-repeat  -22em -5em;height:5em;	">
     </div>
     
     <!--顶部导航-->

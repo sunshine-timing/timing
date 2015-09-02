@@ -73,6 +73,7 @@ public class LoginDaoImpl implements ILoginDao
 	 * @param moduleIds
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TopModuleBean> geTopModuleBeans(String[] moduleIds)
 	{
@@ -100,6 +101,7 @@ public class LoginDaoImpl implements ILoginDao
 	 * @param roleId
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LeftSubMenuBean> qryLeftMenu(String moduleId, String roleId)
 	{
