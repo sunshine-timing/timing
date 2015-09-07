@@ -48,7 +48,7 @@
 			<tx:method name="modify*" propagation="REQUIRED"
 				rollback-for="java.lang.Throwable" />
 
-			<tx:method name="find*" propagation="SUPPORTS"/>
+			<tx:method name="find*" propagation="SUPPORTS" />
 			<tx:method name="get*" propagation="SUPPORTS" />
 			<tx:method name="select*" propagation="SUPPORTS" />
 			<tx:method name="qry*" propagation="SUPPORTS" />
